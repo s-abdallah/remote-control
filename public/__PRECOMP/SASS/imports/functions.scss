@@ -1,0 +1,529 @@
+// this is a collection of handy functions for various repetitive tasks
+$breakpoints: (xlg:1280px, lg:960px, md:720px, sm:640px, xs:460px, xxs:380px);
+
+// set the color of an element, optional opacity, default to 1.0 if not supplied
+@function color($color, $opacity:1.0) {
+  // color variant is optional
+  @if (type-of($color)==string) {
+    $map: map-get($neoColors, $color);
+    @return rgba(nth($map,1),nth($map,2),nth($map,3), $opacity);
+  } @else {
+    @return rgba(nth($color,1),nth($color,2),nth($color,3),$opacity);
+  }
+}
+
+
+// this is a mixin to set a number of different style options at the same time for all font properties
+// $lists: ('size':15px,'color':color($color-12),'lineheight':10px,'weight':100,'family':'Arial','space':1px,'transform':lowercase,'style':normal,'decoration':none);
+@mixin setFont($lists:()){
+  @if checkvalue($lists, fsize) == false { font-size: map-get($neoFonts, 'fsize'); }
+  @if checkvalue($lists, c) == false { color: color(map-get($neoFonts, 'c')); }
+  @if checkvalue($lists, fstyle) == false { font-style: map-get($neoFonts, 'fstyle'); }
+  @if checkvalue($lists, fw) == false { font-weight: map-get($neoFonts, 'fw'); }
+  @if checkvalue($lists, ff) == false { font-family: map-get($neoFonts, 'ff'); }
+  @if checkvalue($lists, lh) == false { line-height: map-get($neoFonts, 'lh'); }
+  @if checkvalue($lists, ls) == false { letter-spacing: map-get($neoFonts, 'ls'); }
+  @if checkvalue($lists, tt) == false { text-transform: map-get($neoFonts, 'tt'); }
+  @if checkvalue($lists, tdec) == false { text-decoration: map-get($neoFonts, 'tdec'); }
+  @each $label, $map in $lists {
+    @if $label == 'fsize' { font-size: $map; }
+    @if $label == 'fstyle' { font-style: $map; }
+    @if $label == 'c' { color: $map; }
+    @if $label == 'align' { text-align: $map; }
+    @if $label == 'fw' { font-weight: $map; }
+    @if $label == 'ff' { font-family: $map; }
+    @if $label == 'ls' { letter-spacing: $map; }
+    @if $label == 'valign' { vertical-align: $map; }
+    @if $label == 'lh' { line-height: $map; }
+    @if $label == 'tt' { text-transform: $map; }
+    @if $label == 'tdec' { text-decoration: $map; }
+  }
+}
+
+
+// this is a mixin to handle generating a border on an element
+@mixin setBorder($lists:()){
+  $dir: border;
+  $stroke: 1px;
+  $style: solid;
+  $color: color('black');
+  @each $label, $map in $lists {
+    @if $label == 'd' { $dir: border-+$map; }
+    @if $label == 'c' { $color: $map; }
+    @if $label == 's' { $style: $map; }
+    @if $label == 'w' { $stroke: $map; }
+    @if $label == 'r' {
+      -webkit-border-radius: $map;
+      -moz-border-radius: $map;
+      border-radius: $map;
+    }
+  }
+  #{$dir}: $style $color $stroke;
+}
+
+
+// this is the main query to get the css properties, please follow the instruction for using the query shortcuts.
+// w  -> width EX: @include query(('w':100px)); @include query(('w':100px max));
+// wmax -> max-width @include query(('wmax':100px));
+// wmin -> max-width @include query(('wmin':100px));
+// h  -> height EX: @include query(('h':100px)); @include query(('h':100px max));
+// hmax -> max-height @include query(('hmax':100px));
+// hmin -> max-height @include query(('hmin':100px));
+// dim -> set the block dimentions width/height @include query(('dim':100px 50px));
+// bg -> background EX: @include query(('bg':red));
+// padd -> padding EX: @include query(('padd':20px));
+// marg -> margin EX: @include query(('marg':20px));
+// tmarg -> margin-top EX: @include query(('tmarg':20px));
+// rmarg -> margin-right EX: @include query(('rmarg':20px));
+// bmarg -> margin-bottom EX: @include query(('bmarg':20px));
+// lmarg -> margin-left EX: @include query(('lmarg':20px));
+// c -> color EX: @include query(('c':red));
+// align -> text-align EX: @include query(('align':center));
+// valign -> text-align EX: @include query(('valign':sub));
+// fw -> font-weight EX: @include query(('fw':bold));
+// fstyle -> font-style EX: @include query(('fstyle':italic));
+// fsize -> font-size EX: @include query(('fsize':40px));
+// ff -> font-family EX: @include query(('ff':'Roboto'));
+// lh -> font-family EX: @include query(('lh':2rem));
+// ls -> font-family EX: @include query(('ls':2rem));
+// tt -> text-transform EX: @include query(('tt':uppercase));
+// tdec -> text-decoration EX: @include query(('tdec':underline));
+// clr -> clear EX: @include query(('clr':both));
+// cu -> cursor EX: @include query(('cursor':pointer));
+// op -> cursor EX: @include query(('opacity':0));
+// f -> float EX: @include query(('fl':left));
+// z -> z-index EX: @include query(('z':left));
+// b -> border EX: @include query(('b':none));
+// list -> list-style EX: @include query(('list':none));
+// listy -> list-style-type EX: @include query(('listy':circle));
+// listi -> list-style-image EX: @include query(('listi':'sqpurple.gif'));
+// listpos -> list-style-position EX: @include query(('listpos':inside));
+//         a : TThe list-style-position property specifies if the list-item markers should appear inside or outside the content flow.
+// ----------------- a : -1 -> inherit    [inherits this property from its parent element]
+// ----------------- a :  0 -> initial    [sets this property to its default value]
+// ----------------- a :  1 -> inside     [indents the marker and the text. The bullets appear inside the content flow]
+// ----------------- a :  2 -> outside    [keeps the marker to the left of the text. The bullets appears outside the content flow. This is default]
+// pos -> position EX: @include query(('pos':(2,10px auto -1 auto)));
+//                   a : position type , b: list of position direction top-right-bottom-left
+// ----------------- a : -1 -> inherit     [this property from its parent element].
+// ----------------- a :  0 -> initial     [sets this property to its default value].
+// ----------------- a :  1 -> relative    [is positioned relative to its normal position].
+// ----------------- a :  2 -> absolute    [is positioned relative to its first positioned set the location using top right bottom left].
+// ----------------- a :  3 -> fixed       [is positioned relative to the browser window].
+// ----------------- a :  4 -> static      [default value!!. Elements render in order, as they appear in the document flow].
+// ----------------- b :  0px              [only first one set the top position of a positioned element]
+// ----------------- b :  0px 0px          [first, second as define set the top position of a positioned element, right position of a positioned element]
+// ----------------- b :  0px 0px 0px      [first, second, third as define set the top position of a positioned element, right position of a positioned element, bottom position of a positioned element]
+// ----------------- b :  0px 0px 0px 0px  [first, second, third, fourth as define set the top position of a positioned element, right position of a positioned element, bottom position of a positioned element, left position of a positioned element]
+// dis -> display EX: @include query(('dis':(2)));
+//                   a : specifies the type of box used for an HTML element.
+// ----------------- a : -1 -> inherit              [this property from its parent element]
+// ----------------- a :  0 -> initial              [sets this property to its default value]
+// ----------------- a :  1 -> none                 [will not be displayed at all]
+// ----------------- a :  2 -> inline               [Default value. displays an element as an inline element like <span>]
+// ----------------- a :  3 -> block                [displays an element as a block element like <p>]
+// ----------------- a :  4 -> inline-block         [displays an element as an inline-level block container. the inside of this block is formatted as block-level box. and the element itself is formatted as an inline-level box.]
+// ----------------- a :  5 -> table                [let the element behave like a table <table>]
+// ----------------- a :  6 -> table-caption        [let the element behave like a caption <caption>]
+// ----------------- a :  7 -> table-column-group   [let the element behave like a colgroup <colgroup>]
+// ----------------- a :  8 -> table-header-group   [let the element behave like a thead <thead>]
+// ----------------- a :  9 -> table-footer-group   [let the element behave like a tfoot <tfoot>]
+// ----------------- a :  10 -> table-row-group     [let the element behave like a tbody <tbody>]
+// ----------------- a :  11 -> table-cell          [let the element behave like a td <td>]
+// ----------------- a :  12 -> table-column        [let the element behave like a col <col>]
+// ----------------- a :  13 -> table-row           [let the element behave like a tr <tr>]
+// ----------------- a :  14 -> flex                [this defines a flex container, inline or block depending on the given value, it enables a flex context for all its direct children]
+// ----------------- b :  0px              [only first one set the top position of a positioned element]
+// ----------------- b :  0px 0px          [first, second as define set the top position of a positioned element, right position of a positioned element]
+// ----------------- b :  0px 0px 0px      [first, second, third as define set the top position of a positioned element, right position of a positioned element, bottom position of a positioned element]
+// ----------------- b :  0px 0px 0px 0px  [first, second, third, fourth as define set the top position of a positioned element, right position of a positioned element, bottom position of a positioned element, left position of a positioned element]
+// o -> overflew EX: @include query(('o':(2)));
+//                   a : The overflow property specifies what happens if content overflows an element's box.
+// ----------------- a : -1 -> inherit              [this property from its parent element]
+// ----------------- a :  0 -> initial              [sets this property to its default value]
+// ----------------- a :  1 -> auto                 [if overflow is clipped, a scroll-bar should be added to see the rest of the content]
+// ----------------- a :  2 -> scroll               [the overflow is clipped, but a scroll-bar is added to see the rest of the content]
+// ----------------- a :  3 -> hidden               [the overflow is clipped, and the rest of the content will be invisible]
+// ----------------- a :  4 -> visible              [the overflow is not clipped. It renders outside the element's box. This is default]
+// top -> top EX: @include query(('dirT':20px));
+// right -> right EX: @include query(('dirR':20px));
+// bottom -> bottom EX: @include query(('dirB':20px));
+// left -> left EX: @include query(('dirL':20px));
+@mixin query($el) {
+  @each $label, $map in $el {
+    @if $label == 'bg' { background: $map }
+    @if $label == 'padd' { padding: $map }
+    @if $label == 'marg' { margin: $map }
+    @if $label == 'tmarg' { margin-top: $map }
+    @if $label == 'rmarg' { margin-right: $map }
+    @if $label == 'bmarg' { margin-bottom: $map }
+    @if $label == 'lmarg' { margin-left: $map }
+    @if $label == 'w' {
+      @if length($map)==1 { width: $map }
+      @if length($map)>1 { #{nth($map,2)}-width: nth($map,1); }
+    }
+    @if $label == 'wmax' { max-width: $map; }
+    @if $label == 'wmin' { min-width: $map; }
+    @if $label == 'h' {
+      @if length($map)==1 { height: $map }
+      @if length($map)>1 { #{nth($map,2)}-height: nth($map,1); }
+    }
+    @if $label == 'hmax' { max-height: $map; }
+    @if $label == 'hmin' { min-height: $map; }
+    @if $label == 'dim' {
+      @if length($map)==1 { width: $map }
+      @if length($map)>1 { width: nth($map,1); height: nth($map,2); }
+    }
+    @if $label == 'pos' {
+      @if type-of(nth($map,1)) == string { position: nth($map,1); }
+      @else if nth($map,1) == -1 { position: inherit; }
+      @else if nth($map,1) == 0 { position: initial; }
+      @else if nth($map,1) == 1 { position: relative; }
+      @else if nth($map,1) == 2 { position: absolute; }
+      @else if nth($map,1) == 3 { position: fixed; }
+      @else if nth($map,1) == 4 { position: static; }
+      @else { position: relative; }
+      @if length($map) > 1 {
+        $dir: nth($map,2);
+        $length: length($dir);
+        @if $length==1 {
+          @if nth($dir,1)!= -1 { top: nth($dir,1); }
+        }
+        @if $length==2 {
+          @if nth($dir,1)!= -1 { top: nth($dir,1); }
+          @if nth($dir,2)!= -1 { right: nth($dir,2); }
+        }
+        @if $length==3 {
+          @if nth($dir,1)!= -1 { top: nth($dir,1); }
+          @if nth($dir,2)!= -1 { right: nth($dir,2); }
+          @if nth($dir,3)!= -1 { bottom: nth($dir,3); }
+        }
+        @if $length==4 {
+          @if nth($dir,1)!= -1 { top: nth($dir,1); }
+          @if nth($dir,2)!= -1 { right: nth($dir,2); }
+          @if nth($dir,3)!= -1 { bottom: nth($dir,3); }
+          @if nth($dir,4)!= -1 { left: nth($dir,4); }
+        }
+      }
+    }
+    @if $label == 'dis' {
+      @if type-of(nth($map,1)) == string { display: nth($map,1); }
+      @else if nth($map,1) == -1 { display: inherit; }
+      @else if nth($map,1) == 0  { display: initial; }
+      @else if nth($map,1) == 1  { display: none; }
+      @else if nth($map,1) == 2  { display: inline; }
+      @else if nth($map,1) == 3  { display: block; }
+      @else if nth($map,1) == 4  { display: inline-block; }
+      @else if nth($map,1) == 5  { display: table; }
+      @else if nth($map,1) == 6  { display: table-caption; }
+      @else if nth($map,1) == 7  { display: table-column-group; }
+      @else if nth($map,1) == 8  { display: table-header-group; }
+      @else if nth($map,1) == 9  { display: table-footer-group; }
+      @else if nth($map,1) == 10 { display: table-row-group; }
+      @else if nth($map,1) == 11 { display: table-cell; }
+      @else if nth($map,1) == 12 { display: table-column; }
+      @else if nth($map,1) == 13 { display: table-row; }
+      @else if nth($map,1) == 14 { display: flex; }
+      @else { display: inline; }
+    }
+    @if $label == 'o' or $label == 'ox' or $label == 'oy' {
+      $overflow: 'overflow';
+      @if $label == 'o' { $overflow: 'overflow'; }
+      @if $label == 'ox' { $overflow: 'overflow-x'; }
+      @if $label == 'oy' { $overflow: 'overflow-y'; }
+      @if type-of(nth($map,1)) == string { #{$overflow}: nth($map,1); }
+      @else if nth($map,1) == -1 { #{$overflow}: inherit; }
+      @else if nth($map,1) == 0  { #{$overflow}: initial; }
+      @else if nth($map,1) == 1  { #{$overflow}: auto; }
+      @else if nth($map,1) == 2  { #{$overflow}: scroll; }
+      @else if nth($map,1) == 3  { #{$overflow}: hidden; }
+      @else if nth($map,1) == 4  { #{$overflow}: visible; }
+      @else { #{$overflow}: hidden; }
+    }
+    @if $label == 'c' { color: $map }
+    @if $label == 'align' { text-align: $map }
+    @if $label == 'valign' { vertical-align: $map }
+    @if $label == 'clr' { clear: $map }
+    @if $label == 'ff' { font-family: $map }
+    @if $label == 'fw' { font-weight: $map }
+    @if $label == 'fstyle' { font-style: $map }
+    @if $label == 'fsize' { font-size: $map }
+    @if $label == 'lh' { line-height:  $map }
+    @if $label == 'ls' { letter-spacing: $map }
+    @if $label == 'tt' { text-transform: $map }
+    @if $label == 'tdec' { text-decoration: $map }
+    @if $label == 'cu' { cursor: $map }
+    @if $label == 'op' { opacity: $map }
+    @if $label == 'fl' { float: $map }
+    @if $label == 'z' { z-index: $map }
+    @if $label == 'b' { border: $map }
+    @if $label == 'list' { list-style: $map }
+    @if $label == 'listy' { list-style-type: $map }
+    @if $label == 'listi' { list-style-image: url($map) }
+    @if $label == 'listpos' {
+      @if type-of(nth($map,1)) == string { list-style-position: nth($map,1); }
+      @else if nth($map,1) == -1 { list-style-position: inherit; }
+      @else if nth($map,1) == 0  { list-style-position: initial; }
+      @else if nth($map,1) == 1  { list-style-position: inside; }
+      @else if nth($map,1) == 2  { list-style-position: outside; }
+      @else { list-style-position: initial; }
+    }
+    @if $label == 'top' { top: $map }
+    @if $label == 'right' { right: $map }
+    @if $label == 'bottom' { bottom: $map }
+    @if $label == 'left' { left: $map }
+  }
+  @content;
+}
+
+
+
+
+// this function check if the value exists or not into an array,
+@function checkvalue($m, $a){
+    @if map-has-key($m, $a) { @return true; };
+    @each $key,$e in $m {
+      @if (type-of($e) == map) and rmhk($e, $a) { @return true; }
+    }
+  @return false;
+}
+
+
+
+// this is a mixin to handle generating a background
+@mixin setBg($lists:()){
+  $repeat: no-repeat;
+  @each $label, $map in $lists {
+    @if $label=='img' { background-image: url($map); }
+    @if $label=='re' {
+      @if $map==1 { $repeat: repeat; }
+    }
+    @if $label=='s' {
+      @if $map=='cover' {
+        background-size: cover;
+        background-position: center center;
+      }
+      @else { background-size: $map; }
+    }
+    @if $label=='c' { background-color: $map; }
+    @if $label=='pos' { background-position: $map; }
+    @if $label=='a' { background-attachment: $map; }
+  }
+  background-repeat: $repeat;
+}
+
+
+
+// this is a mixin to create a grid responsive
+// @include setGrid(('div':(w:100vw,df:(5,2vw),xlg:(4,4vw),lg:(3,8vw),md:(2,3vw),sm:(1,4vw))));
+@mixin setGrid($grids) {
+  $gridwidth: 100%;
+  $gutter: 2%;
+  $total: 4;
+  $padding:0;
+  $border: 0;
+  $box: 0;
+  @each $sel, $sizes in $grids
+  {
+    @if map-get($sizes, w) != null { $gridwidth: map-get($sizes, w); }
+    @if nth(map-get($sizes, df),1) != null {
+      $default: map-get($sizes, df);
+      $total: nth($default,1);
+      $gutter: nth($default,2);
+    }
+    @if map-get($sizes, padd) != null { $padding: map-get($sizes, padd); }
+    @if map-get($sizes, b) != null { $border: map-get($sizes, b); }
+    @if map-get($sizes, box) != null { $box: map-get($sizes, box); }
+
+    // set the margin for each block
+    $margin: 0 $gutter $gutter 0;
+    $break: 0 0 $gutter 0;
+    $width: 0;
+    // sum the unit width and remove padding and border as using the element as box
+    @if $box == 1 {
+      $width: ($gridwidth - ($gutter * ($total - 1)) ) / $total;
+    }
+    // Sum the unit widths plus the width of the gutters
+    @if $box == 0 {
+      $width: ($gridwidth - ($gutter * ($total - 1)) ) / $total;
+      @if $border == 0 { $width: $width - ($padding * 2); }
+      @else { $width: calc(#{$width} - ((#{$padding} * 2) + (#{$border} * 2))); }
+    }
+    // set the main grid layout
+    #{$sel} {
+      width:$width; margin:$margin; padding: $padding; float:left;
+      @if $box == 1 { box-sizing: border-box; }
+      background: red;
+    }
+    #{$sel}:nth-child(#{$total}n+#{$total}){ margin:$break; }
+    @each $breakpoint, $width in $breakpoints
+    {
+      $cols: map-get($sizes, $breakpoint);
+      @if $cols != null
+      {
+        @media only screen and (max-width: $width)
+        {
+          $units: $cols;
+          @if type-of($cols) != number {
+            $units: nth($cols, 1);
+            $gutter: nth($cols, 2);
+            $margin: 0 $gutter $gutter 0;
+            $break: 0 0 $gutter 0;
+          }
+          $sizewidth: 0;
+          // sum the unit width and remove padding and border as using the element as box
+          @if $box == 1 {
+            $sizewidth: ($gridwidth - ($gutter * ($units - 1)) ) / $units;
+          }
+          // Sum the unit widths plus the width of the gutters
+          @if $box == 0 {
+            $sizewidth: ($gridwidth - ($gutter * ($units - 1)) ) / $units;
+            @if $border == 0 { $sizewidth: $sizewidth - ($padding * 2); }
+            @else { $sizewidth: calc(#{$sizewidth} - ((#{$padding} * 2) + (#{$border} * 2))); }
+          }
+          #{$sel} { width:$sizewidth; margin:$margin; }
+          #{$sel}:nth-child(#{$units+1}n+#{$units+1}){ margin:$margin; }
+          #{$sel}:nth-child(#{$units}n+#{$units}){ margin:$break; }
+        }
+      }
+    }
+  }
+}
+
+
+// this mixin will create the flex for elements.
+// @include setFlex((wrap:wrap,dir:row,jc:space-around,1:1,4:2 ));
+@mixin setFlex($flex:null) {
+  $wrap: 0; $dir: 0; $justify: 0;
+  @if $flex != null {
+    @each $label, $map in $flex
+    {
+      @if $label == 'wrap' { $wrap: $map; }
+      @else if $label == 'dir' { $dir: $map; }
+      @else if $label == 'jc' { $justify: $map; }
+      @else if type-of($label)==number {
+        &:nth-of-type(#{$label}) {
+          -ms-flex-order: $map;
+          order: $map;
+        }
+      }
+      @else {
+        & #{$label} {
+          @if map-get($map, order) != null {
+            -ms-flex-order: map-get($map, order);
+            order: map-get($map, order);
+          }
+          @if map-get($map, group) != null {
+            -webkit-box-ordinal-group: map-get($map, group);
+            -moz-box-ordinal-group : map-get($map, group);
+          }
+          @if map-get($map, flexgrow) != null {
+            -webkit-box-flex: map-get($map, group);
+            -ms-flex-positive: map-get($map, group);
+            flex-grow: map-get($map, group);
+          }
+        }
+      }
+    }
+  }
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  @if $wrap != 0 {
+    -ms-flex-wrap: $wrap;
+    flex-wrap: $wrap;
+  }
+  @if $dir != 0 { flex-direction: $dir; }
+  @if $justify != 0 { justify-content: $justify; }
+}
+
+
+
+
+
+@mixin resFont($minFsize, $maxFsize, $minScreen, $maxScreen, $step: 0.1rem) {
+  $minFs: ''; $maxFs: ''; $minLh: 0; $maxLh: 0;
+  @if length($minFsize)>1 {
+    $minFs:nth($minFsize,1);
+    $minLh:nth($minFsize,2);
+  } @else {
+    $minFs:$minFsize;
+  }
+  @if length($maxFsize)>1 {
+    $maxFs:nth($maxFsize,1);
+    $maxLh:nth($maxFsize,2);
+  } @else {
+    $maxFs:$maxFsize;
+  }
+  font-size: $maxFs;
+  @if $maxLh != 0 { line-height: $maxLh; }
+  @media all and (max-width: $minScreen) {
+    font-size: $minFs;
+    @if $minLh != 0 { line-height: $minLh; }
+  }
+  @if $step <= 0 {
+    @warn "parameter to resFont: font step must be greater than 0";
+  }
+  @else {
+    $minFScale: $minFs / $minScreen / 1rem * 1px;
+    $maxFScale: $maxFs / $maxScreen / 1rem * 1px;
+    $minLScale: 0; $maxLScale: 0;
+    @if ($minLh != 0) and ($maxLh != 0) {
+      $minLScale: $minLh / $minScreen / 1rem * 1px;
+      $maxLScale: $maxLh / $maxScreen / 1rem * 1px;
+    }
+    $screenWidth: round($maxScreen);
+    $font-size: $maxFs;
+    $line-height: $maxLh;
+    @while $screenWidth >= $minScreen {
+      $progress: ($screenWidth - $minScreen) / ($maxScreen - $minScreen);
+      $scaleFFactor: $minFScale + $progress * ($maxFScale - $minFScale);
+      $font-size: $screenWidth * $scaleFFactor / 1px * 1rem;
+      @if ($minLh != 0) and ($maxLh != 0) {
+        $scaleLFactor: $minLScale + $progress * ($maxLScale - $minLScale);
+        $line-height: $screenWidth * $scaleLFactor / 1px * 1rem;
+      }
+      @media all and (max-width: $screenWidth) {
+        font-size: $font-size;
+        @if $line-height != 0 { line-height: $line-height; }
+      }
+      $screenStep: $step / $scaleFFactor / 1rem * 1px;
+      @if $screenStep < 1px {
+          $screenStep: 1px;
+      }
+      $screenWidth: round($screenWidth - $screenStep);
+    }
+  }
+}
+
+
+// Set Clear for Both direction
+@mixin setClr($height:null,$pos:'after') {
+  @if $pos == 'both' {
+    &:before, &:after {
+      clear: both; content: ""; display: block;
+      @if $height != null { height: $height; }
+    }
+  }
+  @else {
+    &:#{$pos} {
+      clear: both; content: ""; display: block;
+      @if $height != null { height: $height; }
+    }
+  }
+}
+
+
+
+// this is a mixin to track the class name and adding a block of layout
+@mixin setClass($el) {
+  @each $label, $map in $el {
+    &.#{$label} {
+      @each $k, $v in $map {
+        #{$k} : #{$v};
+      }
+    }
+  }
+}

@@ -1,0 +1,250 @@
+/* ***********************************************************
+## CSS reset
+*********************************************************** */
+@import "imports/reset";
+/* ******************************************************** */
+
+
+
+
+
+/* ***********************************************************
+## COLORS
+*********************************************************** */
+@import "imports/colors";
+/* ******************************************************** */
+
+
+
+
+
+/* ***********************************************************
+## FONTS
+*********************************************************** */
+@import "imports/fonts";
+/* ******************************************************** */
+
+
+
+
+
+/* ***********************************************************
+## FUNCTIONS
+*********************************************************** */
+@import "imports/functions";
+/* ******************************************************** */
+
+
+
+
+
+/* ***********************************************************
+## PROJECT SPECIFIC STYLES
+*********************************************************** */
+
+*{
+  @include query((
+  fsize:1.5rem,
+  td:none,
+  fw:200,
+  marg:0 0 0 0,
+  padd:0 0 0 0));
+}
+
+
+html,
+body{
+}
+
+
+html{
+  @include query((ox:3,oy:2,h:100%));
+}
+
+
+$headerHeight: 125px;
+$outerWidth: calc(100vw - (100vw - 100%));
+$gutter: 2vw;
+
+
+header {
+  @include query((
+  pos:(3,0),
+  bg:color('white'),
+  h:$headerHeight,
+  w:$outerWidth));
+  & > div {
+    @include query((
+    fl:left,
+    w:auto,
+    o:3,
+    marg:$gutter/2 $gutter $gutter/2 $gutter,
+    hmax:$headerHeight / 0.5,
+    h:calc(#{$headerHeight} - #{$gutter})));
+    & > a > img {
+      @include query((h:100%,dis:3));
+    }
+  }
+  & > nav {
+    @include query((w:auto,pos:(2,-1 $gutter $gutter -1)));
+    & > ul {
+      @include query((w:auto,list:none,listy:none));
+      & > li {
+        @include query((dis:4,marg:0 0 0 $gutter));
+        & > a {
+          @include query((fsize:2.5rem));
+          @include setFont((  ));
+          &:hover { @include query((c:color($color-4))); }
+        }
+      }
+    }
+  }
+}
+
+
+div#neo__contentcontainer{
+  @include query((
+  marg : calc((#{$headerHeight} + #{$gutter})) $gutter $gutter $gutter,
+  w : calc(#{$outerWidth} - (#{$gutter} * 2))
+  ));
+  @include setFont();
+  @include setClr(2vw,both);
+}
+
+
+footer {
+  $height: 40px;
+  @include query((w:$outerWidth,h:$height,bg:color($color-1),pos:(3,-1 -1 0)));
+  & > div {
+    @include query((w:calc(#{$outerWidth} / 2),fl:left,lh:$height));
+    &:first-child {
+      & p {
+        @include query(( lmarg:2vw ));
+        @include setFont(( c:color('white'),tt:initial,fw:200,lh:$height ));
+      }
+    }
+    &:last-child {
+      @include query((align:right));
+      & div {
+        @include query(( rmarg:2vw ));
+        & a { @include setFont(( c:color('white'),tt:initial,fw:200,lh:$height )); }
+      }
+    }
+  }
+}
+
+
+
+
+#categories {
+  @include query(( w:92vw,marg:0 auto ));
+  @include setGrid((div:(w:92vw,df:(5,2vw),xlg:(4,4vw),lg:(3,8vw),md:(2,3vw),sm:(1,4vw), padd:20px 40px 20px 40px,box:1)));
+  & div {
+    @include query(( align:center,bg:color($color-1),cu:pointer ));
+    @include setFont(( c:color($color-4, 0.75),tt:uppercase,td:none ));
+    // &:nth-of-type(1) { @include setClr(2vw,both); }
+    outline: none;
+    border-radius: 20px/50px;
+    &:hover {
+      background: #c94e50;
+      color: #fffce1;
+    }
+  }
+}
+
+
+#category {
+  // op:0,dis:1
+  @include query(( w:92vw,marg:0 auto,list:none ));
+  @include setClr(2vw,both);
+  & > li {
+    @include setBorder(( w:2px,c:color($color-10,0.25),r:10px ));
+    @include query(( marg:0 2vw 2vw 0,padd:20px 30px 20px 30px,dis:4,valign:top,w:20vw,align:left,cu:pointer ));
+    box-sizing: border-box;
+    @include setFont(( ));
+    &:hover {
+      @include setBorder(( w:2px,c:color($color-4,0.50),r:10px ));
+      &:not(.child) {
+        &:before {
+          @include query(( c:color($color-4,0.50) ));
+        }
+      }
+      & span {
+        &:before {
+          @include query(( c:color($color-4,0.50) ));
+        }
+      }
+    }
+    &:not(.child) {
+      &:before {
+        content: '........ ';
+        @include query(( valign:text-bottom,c:color($color-10,0.25) ));
+      }
+    }
+    & span {
+      @include query(( dis:3,marg:10px 0 10px 0,align:left ));
+      &:before {
+        content: '........ ';
+        @include query(( valign:text-bottom,c:color($color-10,0.25) ));
+      }
+      $m: 20px;
+      @for $i from 2 through 10 {
+        &:nth-of-type(#{$i}) { margin-left: $m; $m: $m + 20px; }
+      }
+    }
+
+  }
+
+}
+
+
+
+h1#categoryname {
+  @include setFont(( fsize:6rem,lh:6rem,align:center,bmarg:5vw,c:color($color-4,0.75) ));
+	text-shadow: -1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(0,0,0,0.8);
+  @include query(( op:0,dis:2 ));
+}
+
+
+
+a.back {
+  @include query(( align:center,padd:12px 5vw 12px 5vw,tmarg:10vw,dis:5,cu:pointer,op:0 ));
+  @include setFont(( c:color($color-4, 0.75),tt:uppercase,td:none ));
+  @include setBorder(( c:color($color-4, 0.75),w:2px ));
+  @include setBorder(( c:color($color-4, 0.75),w:4px,d:bottom ));
+  &:hover {
+    @include query(( bg:color($color-14),c:color($color-13) ));
+    @include setBorder(( c:color($color-14, 0.75),w:2px ));
+    @include setBorder(( c:color($color-14, 0.55),w:4px,d:bottom ));
+  }
+}
+
+
+
+
+/* ***********************************************************
+## LOAD
+*********************************************************** */
+@import "imports/load.scss";
+/* ******************************************************** */
+
+
+/* ***********************************************************
+## LARGE SCREENS
+*********************************************************** */
+@import "imports/large";
+/* ******************************************************** */
+
+
+/* ***********************************************************
+## MEDIUM SCREENS
+*********************************************************** */
+@import "imports/medium";
+/* ******************************************************** */
+
+
+/* ***********************************************************
+## SMALL SCREENS
+*********************************************************** */
+@import "imports/small";
+/* ******************************************************** */

@@ -1,0 +1,19 @@
+.neo__tabs {
+  @include setFlex((wrap:wrap,label:(order:1,group:2),div:(order:99,group:100,flexgrow:1)));
+  @include query(('clr':both));
+  & label {
+    @include query( (
+      bg : color($color-1), dis : 3, f-w : bold, cursor : pointer, padd : 1rem 2rem 1rem 2rem, marg : 0 1px 0 0
+    ) );
+    -webkit-transition: background ease 0.2s;
+    transition: background ease 0.2s;
+  }
+  & input[type="radio"] {
+    @include query( ( 'dis'  : 1 ) );
+    &:checked + label { @include query( ( 'bg'   :color($color-5) ) ); }
+    &:checked + label + div { @include query( ( 'dis'  : 3 ) ); }
+  }
+  & div {
+    @include query( ( bg :color($color-5), w : 100%, padd :1vw 1vw 1vw 1vw, dis: 1 ) );
+  }
+}

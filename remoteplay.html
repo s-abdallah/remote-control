@@ -1,0 +1,77 @@
+<!doctype html>
+    <html>
+        <head>
+            <title>Neoscape Content Remote Player</title>
+
+            <!-- favicon -->
+            <link rel="shortcut icon" href="_ui/favicon/favicon.ico" />
+            <link rel="apple-touch-icon" sizes="57x57" href="_ui/favicon/apple-icon-57x57.png">
+            <link rel="apple-touch-icon" sizes="60x60" href="_ui/favicon/apple-icon-60x60.png">
+            <link rel="apple-touch-icon" sizes="72x72" href="_ui/favicon/apple-icon-72x72.png">
+            <link rel="apple-touch-icon" sizes="76x76" href="_ui/favicon/apple-icon-76x76.png">
+            <link rel="apple-touch-icon" sizes="114x114" href="_ui/favicon/apple-icon-114x114.png">
+            <link rel="apple-touch-icon" sizes="120x120" href="_ui/favicon/apple-icon-120x120.png">
+            <link rel="apple-touch-icon" sizes="144x144" href="_ui/favicon/apple-icon-144x144.png">
+            <link rel="apple-touch-icon" sizes="152x152" href="_ui/favicon/apple-icon-152x152.png">
+            <link rel="apple-touch-icon" sizes="180x180" href="_ui/favicon/apple-icon-180x180.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-192x192.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-144x144.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-96x96.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-72x72.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-48x48.png">
+            <link rel="icon" type="image/png" sizes="192x192"  href="_ui/favicon/android-icon-36x36.png">
+            <link rel="icon" type="image/png" sizes="32x32" href="_ui/favicon/favicon-32x32.png">
+            <link rel="icon" type="image/png" sizes="96x96" href="_ui/favicon/favicon-96x96.png">
+            <link rel="icon" type="image/png" sizes="16x16" href="_ui/favicon/favicon-16x16.png">
+            <meta name="msapplication-TileImage" content="_ui/favicon/ms-icon-144x144.png">
+            <meta name="msapplication-TileColor" content="#ffffff">
+            <meta name="theme-color" content="#ffffff">
+
+            <!-- include global fonts and css here -->
+            <link rel="stylesheet" href="_css/smartphone.css" />
+
+        </head>
+        <body>
+
+          <div id="neo__contentcontainer">
+            <div id="categories">
+              <!-- <div id="screensaver">screensaver</div> -->
+              <div id="loadmainnav">Load Data</div>
+            </div>
+            <h1 id="categoryname"></h1>
+            <div id="category">
+                <ul id="categorylisting"></ul>
+            </div>
+          </div>
+
+          <header>
+            <div>
+              <img src="_ui/logo_neoscape.jpg" alt="logo" />
+            </div>
+            <nav>
+              <ul>
+                <li><a href="/remoteplay" title="click here to back to dashboard" >Content Remote Control</a></li>
+              </ul>
+            </nav>
+          </header>
+
+          <footer>
+              <div>
+                  <p>Copyright 2017, all rights reserved</p>
+              </div>
+              <div>
+                  <div id="neocredit"><a href="https://neoscape.com" title="Neoscape - Your Vision. Our Perspective." target="_blank">Designed By Neoscape</a></div>
+              </div>
+          </footer>
+
+        </body>
+
+        <!-- include global js scripts here -->
+        <script src="_scripts/js/jquery.js"></script>
+
+        <!-- Socket.io library -->
+      	<script src="/socket.io/socket.io.js"></script>
+
+  			<script src="_scripts/js/control.js"></script>
+
+    </html>
