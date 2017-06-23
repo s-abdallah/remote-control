@@ -19,7 +19,6 @@ var express = require('express'),
 	var port = process.env.PORT || 8080;
 
 	app.set('port', process.env.PORT || 8080);
-	app.use(express.logger());
 
 	app.listen(process.env.PORT, function () {
 	  console.log('***** exp listening on port: ' + process.env.PORT);
