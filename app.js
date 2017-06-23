@@ -18,6 +18,12 @@ var express = require('express'),
 	// This is needed if the app is run on heroku and other cloud providers:
 	var port = process.env.PORT || 8080;
 
+	app.set('port', process.env.PORT || 8080);
+	app.use(express.logger());
+
+	app.listen(process.env.PORT, function () {
+	  console.log('***** exp listening on port: ' + process.env.PORT);
+	});
 
 	// Initialize a new socket.io object. It is bound to
 	// the express app, which allows them to coexist.
