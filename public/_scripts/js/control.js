@@ -2,7 +2,7 @@ $(function() {
     var cCat = "";
     var r = new XMLHttpRequest();
     var socket = io();
-    var url = "http://" + window.location.href.split("/")[2] + "/";
+    var url = "https://" + window.location.href.split("/")[2] + "/";
     document.getElementById("loadmainnav").onclick = function() {
         sendRequest("c?id=mainnav");
         r.onreadystatechange = showMainNav;

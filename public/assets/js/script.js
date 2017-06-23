@@ -22,7 +22,7 @@ $(function() {
 	var r = new XMLHttpRequest();
 
 	// get the URL of the application to test against
-	var url = "http://"+((window.location.href).split("/"))[2]+"/";
+	var url = "https://"+((window.location.href).split("/"))[2]+"/";
 
 	// When the page is loaded it asks you for a key and sends it to the server
 	form.submit(function(e){
