@@ -267,49 +267,49 @@ footer > div:last-child div a {
   margin: 0 auto;
 }
 #categories div {
-  width: 16.8vw;
+  width: 21.5vw;
   margin: 0 2vw 2vw 0;
   padding: 20px 40px 20px 40px;
   float: left;
   box-sizing: border-box;
   background: red;
 }
-#categories div:nth-child(5n+5) {
+#categories div:nth-child(4n+4) {
   margin: 0 0 2vw 0;
 }
 @media only screen and (max-width: 1280px) {
   #categories div {
-    width: 20vw;
-    margin: 0 4vw 4vw 0;
+    width: 43vw;
+    margin: 0 6vw 6vw 0;
   }
-  #categories div:nth-child(5n+5) {
-    margin: 0 4vw 4vw 0;
+  #categories div:nth-child(3n+3) {
+    margin: 0 6vw 6vw 0;
   }
-  #categories div:nth-child(4n+4) {
-    margin: 0 0 4vw 0;
+  #categories div:nth-child(2n+2) {
+    margin: 0 0 6vw 0;
   }
 }
 @media only screen and (max-width: 960px) {
   #categories div {
-    width: 25.33333vw;
-    margin: 0 8vw 8vw 0;
-  }
-  #categories div:nth-child(4n+4) {
+    width: 42vw;
     margin: 0 8vw 8vw 0;
   }
   #categories div:nth-child(3n+3) {
+    margin: 0 8vw 8vw 0;
+  }
+  #categories div:nth-child(2n+2) {
     margin: 0 0 8vw 0;
   }
 }
 @media only screen and (max-width: 720px) {
   #categories div {
-    width: 44.5vw;
-    margin: 0 3vw 3vw 0;
-  }
-  #categories div:nth-child(3n+3) {
+    width: 92vw;
     margin: 0 3vw 3vw 0;
   }
   #categories div:nth-child(2n+2) {
+    margin: 0 3vw 3vw 0;
+  }
+  #categories div:nth-child(1n+1) {
     margin: 0 0 3vw 0;
   }
 }
@@ -487,12 +487,35 @@ a.back:hover {
 /* ***********************************************************
 ## LARGE SCREENS
 *********************************************************** */
+@media screen and (max-width: 1280px) {
+  #category {
+    margin: 4vw auto 4vw auto;
+  }
+  #category > li {
+    width: 44vw;
+    width: 44vw;
+    margin: 0 2vw 4vw 0;
+  }
+}
 /* ******************************************************** */
 /* ***********************************************************
 ## MEDIUM SCREENS
 *********************************************************** */
+@media screen and (max-width: 720px) {
+  #category {
+    margin: 8vw auto 8vw auto;
+  }
+  #category > li {
+    width: 92vw;
+  }
+}
 /* ******************************************************** */
 /* ***********************************************************
 ## SMALL SCREENS
 *********************************************************** */
+@media screen and (max-width: 460px) {
+  #category {
+    margin: 12vw auto 12vw auto;
+  }
+}
 /* ******************************************************** */

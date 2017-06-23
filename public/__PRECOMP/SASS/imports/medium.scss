@@ -12,7 +12,12 @@
 
 
 
-
+  #category {
+    margin: 8vw auto 8vw auto;
+    & > li {
+      width: 92vw;
+    }
+  }
 
 
 

@@ -1,11 +1,17 @@
 @media screen and (max-width: 1280px) {
-  
-    
-    
-    
-   
-    
-    
-    
-    
+
+
+
+  #category {
+    @include query((marg:4vw auto 4vw auto));
+    & > li {
+      width: 44vw;
+      @include query((w:44vw,marg:0 2vw 4vw 0));
+    }
+  }
+
+
+
+
+
 }

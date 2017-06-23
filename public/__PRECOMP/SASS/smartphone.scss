@@ -138,7 +138,7 @@ footer {
 
 #categories {
   @include query(( w:92vw,marg:0 auto ));
-  @include setGrid((div:(w:92vw,df:(5,2vw),xlg:(4,4vw),lg:(3,8vw),md:(2,3vw),sm:(1,4vw), padd:20px 40px 20px 40px,box:1)));
+  @include setGrid((div:(w:92vw,df:(4,2vw),xlg:(2,6vw),lg:(2,8vw),md:(1,3vw),sm:(1,4vw), padd:20px 40px 20px 40px,box:1)));
   & div {
     @include query(( align:center,bg:color($color-1),cu:pointer ));
     @include setFont(( c:color($color-4, 0.75),tt:uppercase,td:none ));
@@ -218,6 +218,7 @@ a.back {
     @include setBorder(( c:color($color-14, 0.55),w:4px,d:bottom ));
   }
 }
+
 
 
 

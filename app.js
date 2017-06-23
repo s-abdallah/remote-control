@@ -10,6 +10,7 @@ var express = require('express'),
 	os = require('os'),
 	http = require('http'),
 	debug = true,
+	jsonfile = require('jsonfile'),
 	app = express();
 
 
@@ -30,7 +31,7 @@ var express = require('express'),
 
 	// set the local path that this app runs from, either manually or dynamically
 	var localPath = path.resolve();
-
+	var file = localPath+'/public/data.json';
 
 
 
@@ -39,7 +40,6 @@ var express = require('express'),
 		res.sendFile(localPath+"/remoteplay.html");
 		// console.log(">> Entering manual control mode\n\r");
 	});
-
 
 
 
@@ -143,7 +143,7 @@ var express = require('express'),
 					break;
 				case "video":   // if we are trying to show a video (webm only!!)
 					//clearTimeout(timer);    // turn off the timer ONLY for videos!!!!!!
-					showMe = "<video width=\"100%\" autoplay loop><source src=\"_content/"+s+"/"+c+id+".webm\" type=\"video/webm\"></video>";
+					showMe = "<video controls=\"true\" width=\"100%\" autoplay loop><source src=\"_content/"+s+"/"+c+id+".webm\" type=\"video/webm\"></video>";
 					break;
 			}
 			io.emit('screensaver', {
@@ -156,6 +156,13 @@ var express = require('express'),
 				id: 'contentarea'
 			});
 
+			// save data
+			url = "play?s=general&c="+c+"&t="+t+"&id="+id;
+			var obj = {call: url}
+			jsonfile.writeFile(file, obj, function (err) {
+			  console.error(err)
+			});
+
 		} else {  // put application into slider mode
 			io.emit('change-content', {
 				access: false
@@ -163,6 +170,10 @@ var express = require('express'),
 			io.emit('screensaver', {
 				access: true,
 				id: 'screensaver'
+			});
+			var obj = {call: false}
+			jsonfile.writeFile(file, obj, function (err) {
+			  console.error(err)
 			});
 		}
 		// res.end("ok");  // send ok that the event took place
@@ -182,6 +193,10 @@ var express = require('express'),
 				access: true,
 				show: cat,
 				id: 'screensaver'
+			});
+			var obj = {call: false}
+			jsonfile.writeFile(file, obj, function (err) {
+			  console.error(err)
 			});
 		}
 	});
@@ -208,8 +223,8 @@ var express = require('express'),
 
 		});
 
-		// Clients send the 'slide-changed' message whenever they navigate to a new slide.
 
+		// Clients send the 'slide-changed' message whenever they navigate to a new slide.
 		socket.on('slide-changed', function(data){
 
 			// Check the secret key again
@@ -235,6 +250,8 @@ var express = require('express'),
 
 
 console.log('Your presentation is running on http://localhost:' + port);
+
+
 
 
 // get the IP address of the server

@@ -8,20 +8,23 @@ $(function() {
 	});
 
 	// Connect to the socket
-
 	var socket = io();
 
 	// Variable initialization
-
 	var form = $('form.login');
 	var secretTextBox = form.find('input[type=text]');
 	var presentation = $('.reveal');
 
-
 	var key = "", animationTimeout;
 
-	// When the page is loaded it asks you for a key and sends it to the server
 
+	// set up the AJAX test request
+	var r = new XMLHttpRequest();
+
+	// get the URL of the application to test against
+	var url = "http://"+((window.location.href).split("/"))[2]+"/";
+
+	// When the page is loaded it asks you for a key and sends it to the server
 	form.submit(function(e){
 
 		e.preventDefault();
@@ -53,6 +56,15 @@ $(function() {
 			presentation.removeClass('blurred');
 
 			form.hide();
+
+
+			readTextFile("data.json", function(text){
+			    var data = JSON.parse(text);
+					if (data['call']!=false) {
+						sendRequest(data['call']);
+						console.log(data['call']);
+					}
+			});
 
 			var ignore = false;
 
@@ -116,7 +128,7 @@ $(function() {
 
 
 	var timer = "",
-	delay = 50000;
+	delay = 90000;
 
 	socket.on('change-content', function(data) {
 		access = data.access;
@@ -141,7 +153,9 @@ $(function() {
 	      opacity:1.0
 	    },250,function(){
 	      if(b != "video"){
-	        timer = setTimeout(function(){startScreensaver();},delay); // reset timer for 5 minutes
+	        timer = setTimeout(function(){
+						sendRequest("screen?id=nav&cat=screensaver");
+					},delay); // reset timer for 5 minutes
 	      }
 	    });
 	  });
@@ -160,6 +174,23 @@ $(function() {
 	});
 
 
+	function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+          callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+	}
 
+
+	// this function will actually send the request to the application for testing purposes
+  function sendRequest(a){
+    r.open("GET",url+a,true);
+    r.send();
+  }
 
 });
